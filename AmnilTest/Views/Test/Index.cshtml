@@ -1,0 +1,107 @@
+@model IEnumerable<AmnilTest.ViewModels.ContestantViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table" border="1" id="contestantTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.District)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.District)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<input type="button" value="Delete" id="Delete" disabled />
+<input type="button" value="Edit" id="Edit" />
+<input type="button" value="New" id="New" />
+
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            console.log("Hello");
+            var contestantId;
+            //$("tbody tr").click(function () {
+            //    var a = $(this).id;
+            //})
+            $('#contestantTable').on('click', 'tbody tr', function (event) {
+                $(this).addClass('highlight').siblings().removeClass('highlight');
+                $('#Delete').prop('disabled', false);
+            });
+
+            $('#Delete').click(function (e) {
+                var rows = getHighlightRow();
+                contestantId = rows.attr('id');
+                if (confirm("Are you sure you want to delete?")) {
+                    // your deletion code
+                    if (contestantId != undefined) {
+                        
+                        console.log('Delete perform for id ' + contestantId);
+                         //$.ajax({
+                         //     url: "test/Delete",
+                         //     type: "POST",
+                         //     data: { id: contestantId },
+                         //     dataType: "json",
+                         //     success: function (data) {
+                         //       alert('deleted');
+                         //     }
+                         //   });
+                        location.href = '@Url.Action("Delete", "Test")?id=' + contestantId ;
+
+                    }
+                }
+                
+            });
+
+            var getHighlightRow = function () {
+                return $('table > tbody > tr.highlight');
+            }
+
+        })
+
+    </script>
+}
