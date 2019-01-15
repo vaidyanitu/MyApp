@@ -148,9 +148,10 @@ namespace AmnilTest.Controllers
 
         // POST: Test/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!ContestantExists(id))
+                return Content("Data with id {0} doesn't exist", id.ToString());
             var contestant = await _context.Contestants.FindAsync(id);
             _context.Contestants.Remove(contestant);
             await _context.SaveChangesAsync();

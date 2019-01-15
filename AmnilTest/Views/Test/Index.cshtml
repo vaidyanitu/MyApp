@@ -47,9 +47,11 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+
                 </td>
                 <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                    <a href='#' onClick=deleterow(@item.Id)>Delete</a>
                 </td>
             </tr>
         }
@@ -74,34 +76,47 @@
             });
 
             $('#Delete').click(function (e) {
-                var rows = getHighlightRow();
-                contestantId = rows.attr('id');
-                if (confirm("Are you sure you want to delete?")) {
-                    // your deletion code
-                    if (contestantId != undefined) {
-                        
-                        console.log('Delete perform for id ' + contestantId);
-                         //$.ajax({
-                         //     url: "test/Delete",
-                         //     type: "POST",
-                         //     data: { id: contestantId },
-                         //     dataType: "json",
-                         //     success: function (data) {
-                         //       alert('deleted');
-                         //     }
-                         //   });
-                        location.href = '@Url.Action("Delete", "Test")?id=' + contestantId ;
-
-                    }
-                }
-                
+                var rows = getHighlightRow();                
+                var result = del(rows);
+                                        @*location.href = '@Url.Action("Delete", "Test")?id=' + contestantId ;*@
             });
 
+            deleterow = function (id) {
+                var rows = getremoveRow(id);
+                del(rows);
+            }
             var getHighlightRow = function () {
                 return $('table > tbody > tr.highlight');
             }
+            var getremoveRow = function (id) {
+                return $('table > tbody > tr#'+id);
+            }
 
+       
+            del = function (row) {
+                var rows = row;
+                contestantId = rows.attr('id');
+            if (confirm("Are you sure you want to delete?")) {
+                // your deletion code
+                if (contestantId != undefined) {
+
+                    console.log('Delete perform for id ' + contestantId);
+                    $.ajax({
+                        url: "test/delete/" + contestantId,
+                        type: "post",
+                        datatype: "json",
+                        success: function (data) {
+                            console.log('Delete successful');
+                            rows.remove();
+                        },
+                        error: function (data) {
+                            console.log('Delete failed');
+                            return false;
+                        }
+                    });
+                }
+            }
+        }
         })
-
     </script>
 }
